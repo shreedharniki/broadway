@@ -1,0 +1,273 @@
+/* Footer: dark close to the page, a fibre signal line and an oversized wordmark rising from the floor. */
+
+.ft {
+  position: relative;
+  overflow: hidden;
+  color: rgba(214, 230, 245, 0.78);
+  background: #061427;
+}
+
+.ft-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 45% 50% at 85% 100%, rgba(7, 85, 245, 0.28), transparent 70%),
+    radial-gradient(ellipse 35% 40% at 0% 0%, rgba(56, 189, 248, 0.1), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 72px);
+}
+
+.ft-inner {
+  position: relative;
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  padding: clamp(56px, 6vw, 88px) clamp(20px, 4vw, 64px) 0;
+}
+
+.ft-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 48px);
+}
+
+.ft-logo {
+  display: inline-flex;
+  flex-direction: column;
+  color: #fff;
+  font-family: var(--font-heading);
+}
+
+.ft-logo span {
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.ft-logo small {
+  margin-top: 4px;
+  color: #5cc8ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.ft-summary {
+  max-width: 420px;
+  margin: 18px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.ft-contact {
+  display: grid;
+  gap: 10px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.ft-contact li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ft-contact svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: #5cc8ff;
+}
+
+.ft-col h4 {
+  margin: 0 0 16px;
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ft-col ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ft-col a,
+.ft-col button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  color: rgba(214, 230, 245, 0.78);
+  background: none;
+  font: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.ft-col a:hover,
+.ft-col button:hover {
+  color: #fff;
+  transform: translateX(3px);
+}
+
+.ft-col .ft-accent-link {
+  color: #5cc8ff;
+  font-weight: 650;
+}
+
+.ft-accent-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ft a:focus-visible,
+.ft button:focus-visible {
+  outline: 3px solid #38d5ff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Fibre divider with a pulse of light running along it */
+.ft-signal {
+  position: relative;
+  height: 1px;
+  margin-top: clamp(40px, 5vw, 64px);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.ft-signal span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 22%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #5cc8ff 60%, #fff 85%, transparent);
+  box-shadow: 0 0 12px rgba(92, 200, 255, 0.9);
+  animation: ft-signal 5s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+@keyframes ft-signal {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(560%); }
+}
+
+.ft-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 0;
+  font-size: 0.82rem;
+}
+
+.ft-bottom p {
+  margin: 0;
+}
+
+.ft-demo {
+  margin-top: 4px !important;
+  color: rgba(214, 230, 245, 0.5);
+  font-size: 0.76rem;
+}
+
+.ft-top {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.ft-top:hover {
+  border-color: #5cc8ff;
+  background: rgba(92, 200, 255, 0.12);
+}
+
+.ft-top svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Oversized wordmark, cropped by the bottom edge of the page */
+.ft-wordmark-wrap {
+  position: relative;
+  height: clamp(80px, 15vw, 230px);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ft-wordmark {
+  margin: 0;
+  color: transparent;
+  background: linear-gradient(to bottom, rgba(140, 214, 255, 0.55), rgba(7, 85, 245, 0.12) 70%, transparent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-family: var(--font-heading);
+  font-size: clamp(4.5rem, 20.5vw, 21rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .ft-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ft-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 639px) {
+  .ft-inner {
+    padding-inline: 16px;
+  }
+
+  .ft-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ft-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-signal span {
+    animation: none;
+    display: none;
+  }
+
+  .ft-col a:hover,
+  .ft-col button:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,296 @@
+.city-prototype {
+  min-height: 100svh;
+  color: #0e2a48;
+  background: #d9edfa;
+  font-family: var(--font-sans);
+}
+
+.city-prototype__stage {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #6aafea 0%, #d9edfa 52%, #b8c8b2 100%);
+}
+
+.city-prototype__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.city-prototype__identity {
+  position: absolute;
+  top: clamp(18px, 3vw, 38px);
+  left: clamp(18px, 4vw, 64px);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: #0e2a48;
+  pointer-events: none;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.city-prototype__brand {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2.15vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.city-prototype__descriptor {
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  font-weight: 600;
+  color: #244d70;
+}
+
+.city-prototype__controls {
+  position: absolute;
+  z-index: 4;
+  top: clamp(18px, 3vw, 34px);
+  right: clamp(18px, 3vw, 44px);
+  width: min(300px, calc(100vw - 36px));
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(248, 252, 255, 0.94);
+  box-shadow: 0 6px 8px rgba(9, 39, 67, 0.12);
+}
+
+.city-prototype__control-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 1px 2px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #183b5b;
+}
+
+.city-prototype__status {
+  color: #1769e0;
+  text-align: right;
+}
+
+.city-prototype__camera-list {
+  display: grid;
+  gap: 5px;
+}
+
+.city-prototype__camera-button,
+.city-prototype__effects-button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  color: #173a59;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.city-prototype__camera-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 9px;
+  font-size: 0.78rem;
+  font-weight: 650;
+  text-align: left;
+}
+
+.city-prototype__camera-button span {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: #37617f;
+  background: #e4eef5;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.city-prototype__camera-button:hover,
+.city-prototype__camera-button[aria-pressed='true'] {
+  color: #fff;
+  background: #0e2a48;
+}
+
+.city-prototype__camera-button[aria-pressed='true'] span {
+  color: #0e2a48;
+  background: #8bdcff;
+}
+
+.city-prototype__camera-button:active,
+.city-prototype__effects-button:active {
+  transform: scale(0.985);
+}
+
+.city-prototype__camera-button:focus-visible,
+.city-prototype__effects-button:focus-visible {
+  outline: 3px solid #54cfff;
+  outline-offset: 2px;
+}
+
+.city-prototype__effects-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 9px;
+  padding: 9px;
+  border-top: 1px solid #d7e4ec;
+  border-radius: 0 0 9px 9px;
+  font-size: 0.76rem;
+  font-weight: 650;
+  text-align: left;
+}
+
+.city-prototype__effects-button strong {
+  margin-left: auto;
+  color: #1769e0;
+  font-size: 0.7rem;
+}
+
+.city-prototype__switch {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 17px;
+  margin-right: 9px;
+  border-radius: 999px;
+  background: #9eafbb;
+  transition: background-color 160ms ease;
+}
+
+.city-prototype__switch span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.city-prototype__effects-button[aria-pressed='true'] .city-prototype__switch {
+  background: #1769e0;
+}
+
+.city-prototype__effects-button[aria-pressed='true'] .city-prototype__switch span {
+  transform: translateX(13px);
+}
+
+.city-prototype__legend {
+  position: absolute;
+  z-index: 3;
+  right: clamp(18px, 3vw, 44px);
+  bottom: clamp(18px, 3vw, 34px);
+  display: flex;
+  gap: 18px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  color: #153c5d;
+  background: rgba(245, 251, 255, 0.9);
+  box-shadow: 0 4px 8px rgba(9, 39, 67, 0.1);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.city-prototype__legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.city-prototype__legend i {
+  display: block;
+  width: 22px;
+  height: 3px;
+  border-radius: 999px;
+  background: #22b8ff;
+  box-shadow: 0 0 5px rgba(34, 184, 255, 0.55);
+}
+
+.city-prototype__legend span:last-child i {
+  height: 2px;
+  background: #67d5ff;
+}
+
+.city-prototype__fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: end center;
+  padding: 26px;
+  background:
+    linear-gradient(180deg, rgba(226, 243, 255, 0.06), rgba(8, 30, 52, 0.18)),
+    url('/images/broadway-new-home.png') center / cover no-repeat;
+}
+
+.city-prototype__fallback-note {
+  max-width: 520px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #fff;
+  background: rgba(9, 35, 62, 0.9);
+  font-size: 0.78rem;
+  font-weight: 650;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .city-prototype__identity {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .city-prototype__controls {
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+    padding: 10px;
+  }
+
+  .city-prototype__control-heading {
+    display: none;
+  }
+
+  .city-prototype__camera-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .city-prototype__camera-button {
+    min-height: 44px;
+    justify-content: center;
+    padding: 7px 4px;
+    font-size: 0;
+  }
+
+  .city-prototype__camera-button span {
+    width: 28px;
+    height: 28px;
+    font-size: 0.72rem;
+  }
+
+  .city-prototype__legend {
+    right: 12px;
+    bottom: 126px;
+    gap: 10px;
+    font-size: 0.62rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .city-prototype__camera-button,
+  .city-prototype__effects-button,
+  .city-prototype__switch,
+  .city-prototype__switch span {
+    transition: none;
+  }
+}

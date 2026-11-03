@@ -1,0 +1,586 @@
+/* Enquiry: light panel rising over the dusk finale, with the one-partner network map as an
+   interactive picker for the form's service field. */
+
+.eq-section {
+  position: relative;
+  z-index: 1;
+  margin-top: -36px;
+  padding: clamp(64px, 7vw, 104px) 0 clamp(64px, 7vw, 104px);
+  scroll-margin-top: 40px;
+  border-radius: 36px 36px 0 0;
+  color: #0e2a48;
+  background:
+    radial-gradient(ellipse 50% 40% at 25% 45%, rgba(56, 152, 236, 0.1), transparent 70%),
+    #f3f6fb;
+}
+
+.eq-inner {
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4vw, 64px);
+}
+
+.eq-eyebrow {
+  margin: 0 0 12px;
+  color: #0755f5;
+  font-family: var(--font-heading);
+  font-size: clamp(0.88rem, 1.05vw, 1rem);
+  font-weight: 750;
+}
+
+.eq-head h2 {
+  margin: 0;
+  color: #0e2a48;
+  font-size: clamp(2.3rem, 3.6vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.eq-head h2 span {
+  color: #0755f5;
+}
+
+.eq-intro {
+  max-width: 640px;
+  margin: 14px 0 0;
+  color: #4a6480;
+  font-size: clamp(1rem, 1.15vw, 1.12rem);
+  line-height: 1.55;
+}
+
+.eq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+/* ---------- Network map ---------- */
+
+.eq-map {
+  perspective: 1400px;
+}
+
+/* When the map tilts, half of it dips behind these 3D layers' own planes; letting clicks
+   pass through them (and lifting the hotspots off the image) keeps every hotspot clickable */
+.eq-map-stage {
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.eq-map-tilt {
+  position: relative;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.eq-map-tilt img {
+  display: block;
+  pointer-events: none;
+  width: 100%;
+  height: auto;
+  /* melt the render's grey studio backdrop into the section */
+  -webkit-mask-image: radial-gradient(ellipse 74% 80% at 50% 52%, #000 70%, transparent 100%);
+  mask-image: radial-gradient(ellipse 74% 80% at 50% 52%, #000 70%, transparent 100%);
+}
+
+/* Pulse on the Broadway box at the heart of the map */
+.eq-map-core {
+  position: absolute;
+  left: 52.5%;
+  top: 54.5%;
+  width: 16%;
+  aspect-ratio: 2;
+  translate: -50% -50%;
+  border: 1.5px solid rgba(56, 189, 248, 0.8);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  animation: eq-core 3.2s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+}
+
+@keyframes eq-core {
+  0% { opacity: 0; transform: scale(0.2); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+.eq-spot {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  translate: -50% -50%;
+  transform: translateZ(2px);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.eq-spot-dot {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #0755f5;
+  box-shadow: 0 2px 8px rgba(7, 85, 245, 0.5);
+  transition: transform 200ms ease, background-color 200ms ease;
+}
+
+.eq-spot-dot::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border: 2px solid rgba(7, 85, 245, 0.45);
+  border-radius: 50%;
+  animation: eq-spot 2.4s ease-out infinite;
+}
+
+@keyframes eq-spot {
+  0% { opacity: 1; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+
+.eq-spot-label {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  padding: 6px 11px;
+  border-radius: 999px;
+  color: #fff;
+  background: #0e2a48;
+  box-shadow: 0 6px 18px rgba(14, 42, 72, 0.25);
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 750;
+  white-space: nowrap;
+  opacity: 0;
+  translate: -50% 6px;
+  pointer-events: none;
+  transition: opacity 180ms ease, translate 180ms ease;
+}
+
+.eq-spot:hover .eq-spot-label,
+.eq-spot:focus-visible .eq-spot-label,
+.eq-spot[aria-pressed='true'] .eq-spot-label {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+.eq-spot:hover .eq-spot-dot {
+  transform: scale(1.2);
+}
+
+.eq-spot[aria-pressed='true'] .eq-spot-dot {
+  background: #38d5ff;
+  transform: scale(1.25);
+}
+
+.eq-spot[aria-pressed='true'] .eq-spot-label {
+  background: #0755f5;
+}
+
+.eq-spot:focus-visible {
+  outline: 3px solid #38d5ff;
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+.eq-map-hint {
+  margin: 4px 0 0;
+  color: #4a6480;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.eq-map-hint strong {
+  color: #0e2a48;
+}
+
+/* ---------- Contact card ---------- */
+
+.eq-contact {
+  margin-top: clamp(24px, 3vw, 40px);
+  padding: clamp(20px, 2.4vw, 32px);
+  border-radius: 24px;
+  color: #fff;
+  background: linear-gradient(160deg, #13355a, #0e2a48);
+  box-shadow: 0 20px 48px rgba(14, 42, 72, 0.2);
+}
+
+.eq-contact-head span {
+  color: #5cc8ff;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.eq-contact-head h3 {
+  margin: 4px 0 0;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.eq-contact-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin: 20px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  list-style: none;
+}
+
+.eq-contact-list li {
+  display: flex;
+  gap: 12px;
+  color: rgba(214, 230, 245, 0.85);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.eq-contact-list svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: #5cc8ff;
+}
+
+.eq-contact-list strong {
+  display: block;
+  color: #fff;
+  font-weight: 650;
+}
+
+.eq-contact-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  color: rgba(214, 230, 245, 0.85);
+  background: rgba(4, 18, 43, 0.35);
+  font-size: 0.84rem;
+}
+
+.eq-contact-note svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: #5cc8ff;
+}
+
+.eq-corridors {
+  margin: 14px 0 0;
+  color: rgba(214, 230, 245, 0.75);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.eq-corridors strong {
+  color: #fff;
+}
+
+/* ---------- Form ---------- */
+
+.eq-form-card {
+  padding: clamp(22px, 2.6vw, 36px);
+  border: 1px solid rgba(14, 42, 72, 0.08);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 30px 70px rgba(14, 42, 72, 0.12);
+}
+
+.eq-demo-note {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding: 14px 16px;
+  border: 1px solid #f4d48a;
+  border-radius: 14px;
+  color: #7a4d06;
+  background: #fff8e8;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.eq-demo-note svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: #c98a12;
+}
+
+.eq-demo-note strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.eq-form {
+  display: grid;
+  gap: 16px;
+}
+
+.eq-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.eq-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #1c3a5a;
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+
+.eq-field label span {
+  color: #e0475d;
+}
+
+.eq-field input,
+.eq-field select,
+.eq-field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid #cdd9e6;
+  border-radius: 12px;
+  color: #0e2a48;
+  background: #f8fbfe;
+  font: inherit;
+  font-size: 0.95rem;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.eq-field textarea {
+  resize: vertical;
+}
+
+.eq-field input::placeholder,
+.eq-field textarea::placeholder {
+  color: #8aa0b8;
+}
+
+.eq-field input:focus,
+.eq-field select:focus,
+.eq-field textarea:focus {
+  border-color: #0755f5;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(7, 85, 245, 0.14);
+}
+
+.eq-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  margin-top: 6px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: #0755f5;
+  box-shadow: 0 10px 26px rgba(7, 85, 245, 0.32);
+  font-family: var(--font-heading);
+  font-size: 0.98rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.eq-submit:hover {
+  background: #0647d0;
+  transform: translateY(-1px);
+}
+
+.eq-submit svg {
+  width: 18px;
+  height: 18px;
+}
+
+.eq-submit-note {
+  margin: -4px 0 0;
+  color: #6b8299;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.eq-submit:focus-visible,
+.eq-reset:focus-visible {
+  outline: 3px solid #38d5ff;
+  outline-offset: 3px;
+}
+
+/* ---------- Success ---------- */
+
+.eq-success {
+  padding: clamp(20px, 2.4vw, 28px);
+  border: 1px solid rgba(7, 85, 245, 0.25);
+  border-radius: 18px;
+  background: #eaf3fd;
+}
+
+.eq-success h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #0755f5;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.eq-success h3 svg {
+  width: 24px;
+  height: 24px;
+}
+
+.eq-summary {
+  margin: 18px 0 0;
+  padding: 6px 16px;
+  border: 1px solid #d7e3ef;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.eq-summary div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf2f7;
+  font-size: 0.88rem;
+}
+
+.eq-summary div:last-child {
+  border-bottom: 0;
+}
+
+.eq-summary dt {
+  color: #6b8299;
+}
+
+.eq-summary dd {
+  margin: 0;
+  font-weight: 650;
+  text-align: right;
+}
+
+.eq-summary-accent {
+  color: #0755f5;
+}
+
+.eq-success-note {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 1px solid #f4d48a;
+  border-radius: 12px;
+  color: #7a4d06;
+  background: #fff8e8;
+  font-size: 0.82rem;
+}
+
+.eq-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 16px;
+  padding: 0 16px;
+  border: 1px solid #cdd9e6;
+  border-radius: 12px;
+  color: #0e2a48;
+  background: #fff;
+  font-size: 0.86rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.eq-reset svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1023px) {
+  .eq-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* map, then the form it fills, then contact details */
+  .eq-visual {
+    display: contents;
+  }
+
+  .eq-map-hint {
+    order: 1;
+  }
+
+  .eq-form-card {
+    order: 2;
+  }
+
+  .eq-contact {
+    order: 3;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .eq-section {
+    border-radius: 24px 24px 0 0;
+  }
+
+  .eq-inner {
+    padding-inline: 16px;
+  }
+
+  .eq-row,
+  .eq-contact-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* 16px stops iOS zooming into fields */
+  .eq-field input,
+  .eq-field select,
+  .eq-field textarea {
+    font-size: 1rem;
+  }
+
+  /* on small screens only the selected hotspot keeps its label, to avoid clutter */
+  .eq-spot:hover:not([aria-pressed='true']) .eq-spot-label {
+    opacity: 0;
+  }
+
+  .eq-spot-label {
+    font-size: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-map-core,
+  .eq-spot-dot::after {
+    animation: none;
+  }
+}

@@ -1,0 +1,452 @@
+/* Full-screen connected-city hero with a scroll-driven dive into the network hub.
+   The image is laid out on a "stage" that mimics object-fit: cover, so service
+   nodes and the hub can be pinned to points on the photo in % coordinates. */
+
+.hero-dive {
+  --hd-ar: 1.7917; /* 5504 / 3072 */
+  --hd-hub-x: 57.3%;
+  --hd-hub-y: 65%;
+  position: relative;
+  background: #f5fafd;
+}
+
+.hd-viewport {
+  position: relative;
+  height: 100svh;
+  min-height: 640px;
+  overflow: hidden;
+  /* matches the top edge of the sky so a letterboxed stage blends in */
+  background: #54a5f8;
+}
+
+.hd-layer {
+  position: absolute;
+  /* overscan so pointer parallax never reveals an edge */
+  inset: -24px;
+  container-type: size;
+  will-change: transform;
+}
+
+.hd-stage {
+  /* Cover the layer, but never overscale past 1.12x its width: on 4:3-ish screens the
+     edge services would be cropped away, so the stage letterboxes into the sky instead. */
+  --hd-w: max(100cqw, min(calc(100cqh * var(--hd-ar)), calc(100cqw * 1.12)));
+  position: absolute;
+  left: 50%;
+  /* centred when taller than the layer, bottom-anchored when shorter */
+  bottom: min(0px, calc((100cqh - var(--hd-w) / var(--hd-ar)) / 2));
+  width: var(--hd-w);
+  aspect-ratio: var(--hd-ar);
+  translate: -50% 0;
+}
+
+/* GSAP drives transforms on these inner boxes, so the CSS translate above stays intact */
+.hd-zoom {
+  position: absolute;
+  inset: 0;
+  transform-origin: var(--hd-hub-x) var(--hd-hub-y);
+  will-change: transform;
+}
+
+.hd-stage picture,
+.hd-stage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hd-stage img {
+  object-fit: cover;
+}
+
+.hd-sky picture img {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 5%);
+  mask-image: linear-gradient(to bottom, transparent, #000 5%);
+}
+
+/* The city copy only keeps the ground; the sky below it moves at its own pace */
+.hd-city picture img {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 42%, #000 56%);
+  mask-image: linear-gradient(to bottom, transparent 42%, #000 56%);
+}
+
+/* ---------- Hub ---------- */
+
+.hd-hub {
+  position: absolute;
+  left: var(--hd-hub-x);
+  top: var(--hd-hub-y);
+  width: 16%;
+  aspect-ratio: 2.6;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.hd-hub-inner {
+  position: absolute;
+  inset: 0;
+}
+
+.hd-hub-ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(214, 240, 255, 0.85);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.45), inset 0 0 14px rgba(56, 189, 248, 0.3);
+  opacity: 0;
+  animation: hd-ring 3.6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+}
+
+.hd-hub-ring:nth-child(2) {
+  animation-delay: 1.2s;
+}
+
+.hd-hub-ring:nth-child(3) {
+  animation-delay: 2.4s;
+}
+
+.hd-hub-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(circle, #fff 0%, rgba(186, 230, 255, 0.95) 22%, rgba(56, 189, 248, 0.45) 48%, transparent 72%);
+  animation: hd-core 2.4s ease-in-out infinite;
+}
+
+.hd-hub-flare {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  opacity: 0;
+  background: radial-gradient(circle, #fff 0%, rgba(240, 249, 255, 0.96) 26%, rgba(214, 240, 255, 0.6) 46%, transparent 70%);
+}
+
+@keyframes hd-ring {
+  0% { opacity: 0; transform: scale(0.2); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1); }
+}
+
+@keyframes hd-core {
+  0%, 100% { transform: scale(0.9); opacity: 0.9; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+/* ---------- Service nodes ---------- */
+
+.hd-nodes {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.hd-node {
+  position: absolute;
+  left: var(--x);
+  top: calc(var(--y) - var(--stem));
+  width: 0;
+  height: var(--stem);
+  /* hidden until the scroll timeline reveals it */
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hd-node-stem {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.75px;
+  width: 1.5px;
+  transform-origin: bottom;
+  background: linear-gradient(to top, rgba(186, 230, 255, 0.95), rgba(255, 255, 255, 0.25));
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
+.hd-node-dot {
+  position: absolute;
+  bottom: -5px;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35), 0 0 16px 4px rgba(56, 189, 248, 0.9);
+}
+
+.hd-node-pop {
+  position: absolute;
+  bottom: 100%;
+  left: -120px;
+  display: flex;
+  justify-content: center;
+  width: 240px;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+}
+
+.hd-node-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 8px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.hd-node-icon {
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 3.6vw, 60px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  color: #fff;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.34), rgba(56, 152, 236, 0.22));
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.1),
+    0 0 28px rgba(56, 189, 248, 0.55),
+    inset 0 0 16px rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  transition: background-color 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.hd-node-icon svg {
+  width: 46%;
+  height: 46%;
+  filter: drop-shadow(0 0 6px rgba(186, 230, 255, 0.9));
+}
+
+.hd-node-label {
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #0e2a48;
+  background: rgba(247, 251, 255, 0.86);
+  box-shadow: 0 4px 14px rgba(14, 42, 72, 0.14);
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: color 200ms ease, background-color 200ms ease;
+}
+
+.hd-node-badge:hover .hd-node-icon,
+.hd-node-badge:focus-visible .hd-node-icon {
+  border-color: #fff;
+  background-color: rgba(7, 85, 245, 0.55);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.18),
+    0 0 36px rgba(56, 189, 248, 0.85),
+    inset 0 0 16px rgba(255, 255, 255, 0.4);
+}
+
+.hd-node-badge:hover .hd-node-label,
+.hd-node-badge:focus-visible .hd-node-label {
+  color: #fff;
+  background: #0755f5;
+}
+
+.hd-node-badge:focus-visible {
+  outline: none;
+}
+
+.hd-node-badge:focus-visible .hd-node-icon {
+  outline: 3px solid #38d5ff;
+  outline-offset: 4px;
+}
+
+/* ---------- Copy ---------- */
+
+.hd-sky-wash {
+  position: absolute;
+  inset: 0 0 auto;
+  height: min(620px, 72vh);
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse closest-side at 50% 42%,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.4) 26%,
+    rgba(244, 250, 255, 0.22) 54%,
+    rgba(244, 250, 255, 0) 100%
+  );
+}
+
+.hd-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(104px, 13.6vh, 128px) clamp(20px, 4vw, 64px) 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hd-content .home-hero-copy,
+.hd-lower {
+  width: min(100%, 900px);
+}
+
+.hd-copy-item {
+  pointer-events: auto;
+}
+
+.hd-caption {
+  position: absolute;
+  top: clamp(108px, 15vh, 156px);
+  left: 50%;
+  width: min(calc(100% - 40px), 860px);
+  translate: -50% 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hd-caption > * {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hd-caption-eyebrow {
+  margin: 0 0 10px;
+  color: #0755f5;
+  font-family: var(--font-heading);
+  font-size: clamp(0.9rem, 1.1vw, 1.02rem);
+  font-weight: 750;
+}
+
+.hd-caption-title {
+  margin: 0;
+  color: #0e2a48;
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 3.4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.hd-caption-list {
+  margin: 14px 0 0;
+  color: rgba(16, 42, 69, 0.78);
+  font-size: clamp(0.95rem, 1.05vw, 1.08rem);
+  font-weight: 500;
+}
+
+.hd-cue {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(14, 42, 72, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.hd-cue svg {
+  width: 16px;
+  height: 16px;
+  animation: hd-cue 1.8s ease-in-out infinite;
+}
+
+@keyframes hd-cue {
+  0%, 100% { transform: translateY(-2px); }
+  50% { transform: translateY(3px); }
+}
+
+/* End of the dive: the hub's light settles into the next section's background */
+.hd-fade {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: #f5fafd;
+  pointer-events: none;
+}
+
+/* ---------- Phones and portrait screens: portrait composition with service icons in the image ---------- */
+
+@media (max-width: 767px), (max-aspect-ratio: 1/1) {
+  .hero-dive {
+    --hd-ar: 0.5581; /* 3072 / 5504 */
+    --hd-hub-x: 65.7%;
+    --hd-hub-y: 67.5%;
+  }
+
+  .hd-hub {
+    width: 46%;
+  }
+
+  .hd-nodes,
+  .hd-cue {
+    display: none;
+  }
+
+  .hd-content {
+    padding: 92px 16px 20px;
+  }
+
+  .hd-lower {
+    margin-top: auto;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 18px;
+    background: rgba(247, 251, 255, 0.8);
+    box-shadow: 0 12px 32px rgba(14, 42, 72, 0.18);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .hd-lower .home-hero-description {
+    margin-top: 0;
+    font-size: 0.95rem;
+  }
+
+  .hd-lower .home-hero-actions {
+    margin-top: 14px;
+  }
+
+  .hd-caption {
+    top: 96px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hd-hub-ring,
+  .hd-hub-core,
+  .hd-cue svg {
+    animation: none;
+  }
+
+  .hd-hub-ring {
+    opacity: 0.6;
+  }
+
+  .hd-cue {
+    display: none;
+  }
+}

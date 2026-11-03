@@ -1,0 +1,335 @@
+<title>Broadway Website Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap">
+<style>
+/* Layout: a single reading column (report), with wide tables and a score panel breaking out to 1040px. Brand palette from Broadway's own navy and fibre blue. */
+:root {
+  --bg: #f5f8fc;
+  --surface: #ffffff;
+  --surface-2: #eaf0fa;
+  --fg: #0b1f44;
+  --muted: #4a5b74;
+  --line: #d5deeb;
+  --accent: #1a56db;
+  --accent-soft: #dce6f7;
+  --warn: #c2410c;
+  --warn-soft: #fdeee6;
+  --good: #15803d;
+  --hero-1: #0b1f44;
+  --hero-2: #1a56db;
+  --hero-fg: #f5f8fc;
+  --hero-muted: #c9d8f5;
+  --font-display: "Manrope", "Segoe UI", Arial, sans-serif;
+  --font-body: "Manrope", "Segoe UI", Arial, sans-serif;
+  --font-mono: Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #08142c; --surface: #0f1f3d; --surface-2: #142a50; --fg: #e8eef8; --muted: #a3b3cc;
+    --line: #23385f; --accent: #6f9bff; --accent-soft: #1b3466; --warn: #ff9a62; --warn-soft: #3a2218;
+    --good: #5fd08a; --hero-1: #0b1f44; --hero-2: #1a4fc4; --hero-fg: #f5f8fc; --hero-muted: #c9d8f5;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #08142c; --surface: #0f1f3d; --surface-2: #142a50; --fg: #e8eef8; --muted: #a3b3cc;
+  --line: #23385f; --accent: #6f9bff; --accent-soft: #1b3466; --warn: #ff9a62; --warn-soft: #3a2218;
+  --good: #5fd08a; --hero-1: #0b1f44; --hero-2: #1a4fc4; --hero-fg: #f5f8fc; --hero-muted: #c9d8f5;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.6; padding-inline: 16px; }
+.wrap { max-width: 1040px; margin-inline: auto; padding-block: 32px 96px; display: flex; flex-direction: column; gap: 56px; }
+.prose { max-width: 720px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; }
+h3 { font-size: 1.15rem; font-weight: 700; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.eyebrow.warn { color: var(--warn); }
+section { display: flex; flex-direction: column; gap: 20px; }
+.lead { font-size: 1.1rem; color: var(--muted); max-width: 720px; }
+
+.hero { background: linear-gradient(135deg, var(--hero-1) 0%, #12306a 60%, var(--hero-2) 100%); color: var(--hero-fg); border-radius: 20px; padding: clamp(28px, 5vw, 56px); display: flex; flex-direction: column; gap: 20px; }
+.hero .eyebrow { color: #8fb4ff; }
+.hero h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800; }
+.hero p { color: var(--hero-muted); max-width: 640px; font-size: 1.1rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 0.9rem; color: var(--hero-muted); }
+
+.verdict { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 720px; }
+.score { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 6px; }
+.score.primary { border: 2px solid var(--accent); }
+.score .label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.score .num { font-family: var(--font-display); font-size: 3.2rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.score.primary .num { color: var(--accent); }
+.score .note { color: var(--muted); font-size: 0.95rem; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card p { color: var(--muted); font-size: 0.96rem; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 0.95rem; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-display); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
+tr:last-child td { border-bottom: none; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.pill { display: inline-block; font-size: 0.78rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
+.pill.up { background: var(--accent-soft); color: var(--accent); }
+.pill.down { background: var(--warn-soft); color: var(--warn); }
+
+.bars { display: flex; flex-direction: column; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.bar-row { display: grid; grid-template-columns: 200px minmax(0, 1fr) 90px; gap: 14px; align-items: center; font-size: 0.93rem; }
+.bar-track { display: flex; flex-direction: column; gap: 4px; }
+.bar { height: 10px; border-radius: 6px; background: var(--line); }
+.bar.new { background: var(--accent); }
+.bar-vals { font-size: 0.85rem; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.legend { display: flex; gap: 20px; font-size: 0.85rem; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+.legend .l-old::before { background: var(--line); }
+.legend .l-new::before { background: var(--accent); }
+
+.points { display: flex; flex-direction: column; gap: 10px; padding-left: 1.2em; margin: 0; }
+.points li { padding-left: 4px; }
+.points li::marker { color: var(--accent); }
+.quote { background: var(--accent-soft); color: var(--fg); padding: 22px 26px; border-radius: 14px; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; }
+.audit-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.audit { background: var(--hero-1); color: var(--hero-fg); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+.audit .label { font-size: 0.85rem; font-weight: 600; color: #8fb4ff; }
+.audit .num { font-family: var(--font-display); font-size: 2.8rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.audit .num small { font-size: 1.2rem; color: var(--hero-muted); font-weight: 600; }
+.audit p { color: var(--hero-muted); font-size: 0.95rem; }
+.sev { font-weight: 700; font-variant-numeric: tabular-nums; }
+.sev.p0, .sev.p1 { color: var(--warn); }
+.sev.p2 { color: var(--accent); }
+
+.weeks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.week { background: var(--surface); border: 1px solid var(--line); border-top: 5px solid var(--accent); border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; }
+.week.w1 { border-top-color: var(--warn); }
+.week.w3 { border-top-color: var(--fg); }
+.week ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 4px; }
+code { font-family: var(--font-mono); font-size: 0.86em; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; }
+footer { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 20px; }
+
+@media (max-width: 760px) {
+  .verdict, .grid2, .grid3, .weeks, .audit-grid { grid-template-columns: minmax(0, 1fr); }
+  .bar-row { grid-template-columns: minmax(0, 1fr) 80px; }
+  .bar-row .bar-label { grid-column: 1 / -1; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Broadway Communication Pvt. Ltd.</p>
+    <h1>Website review</h1>
+    <p>The current live demo and the new build, assessed for UI/UX, page flow and marketing impact, with a three-week plan to launch.</p>
+    <div class="meta"><span>UI/UX and marketing assessment</span><span>October 2026</span></div>
+  </header>
+
+  <section aria-labelledby="s-verdict">
+    <p class="eyebrow">Executive summary</p>
+    <h2 id="s-verdict">The new build is a much stronger brand. It still needs the sales basics.</h2>
+    <p class="lead">The new build makes Broadway look like an established infrastructure partner; the live demo looks like a bought template. But the new build dropped pricing, click-to-call, WhatsApp and the PIN availability check, which home buyers rely on. Neither site currently delivers enquiries anywhere.</p>
+    <div class="verdict">
+      <div class="score"><span class="label">Live demo today</span><span class="num">6.0</span><span class="note">Template look, forms not connected</span></div>
+      <div class="score primary"><span class="label">New build</span><span class="num">7.5</span><span class="note">Premium brand, missing pricing and calls</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-scope">
+    <h2 id="s-scope">Two sites, one method</h2>
+    <div class="grid3">
+      <div class="card"><h3>Live demo</h3><p>codemythought.in/demo/broadway. PHP site on a bought jQuery theme. Homepage plus 15 inner pages, all loading correctly.</p></div>
+      <div class="card"><h3>New build</h3><p>Full-screen home page built from scratch in React, Vite, Tailwind and GSAP. Run locally for this review.</p></div>
+      <div class="card"><h3>Method</h3><p>Walkthroughs at desktop (1366px) and mobile (375px) widths; page code, forms, links, metadata and load timing; plus three structured audits of the new build (UX heuristics, an automated anti-pattern scan, a six-pillar visual review).</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-old">
+    <p class="eyebrow">Part 1 · Live demo</p>
+    <h2 id="s-old">What the current site gets right</h2>
+    <div class="grid2">
+      <div class="card"><h3>Prices on the page</h3><p>₹299 (30 Mbps), ₹599 (100 Mbps, marked Popular) and ₹1,099 (400 Mbps).</p></div>
+      <div class="card"><h3>Easy to call</h3><p>Click-to-call 951 313 1177 throughout, plus a WhatsApp button.</p></div>
+      <div class="card"><h3>Availability check</h3><p>A PIN code and building form for home buyers.</p></div>
+      <div class="card"><h3>Clear local positioning</h3><p>"Local team, not a distant call centre" is the right angle against national ISPs.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-old-crit">
+    <h2 id="s-old-crit">Five problems that cost leads today</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Issue</th><th>What we found</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td><b>Forms go nowhere</b></td><td>Both forms submit to <code>#</code></td><td>Every enquiry is lost</td></tr>
+          <tr><td><b>Mobile hero typo</b></td><td>"Fiberfor" on phones: the line break removes the space</td><td>First impression looks broken</td></tr>
+          <tr><td><b>Slow first load</b></td><td>About 11 s on a first visit in our test; 99 requests, 1.7 MB, 26 scripts</td><td>Visitors leave before the hero appears</td></tr>
+          <tr><td><b>Hidden content</b></td><td>Sections stay blank until their scroll animation runs</td><td>Empty screens on fast scroll or slow phones</td></tr>
+          <tr><td><b>Dead social icons</b></td><td>Facebook, Instagram, LinkedIn and YouTube all link to <code>#</code></td><td>Looks unfinished</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Page flow</h3>
+    <ul class="points">
+      <li>The hero carousel rotates three different pitches (CCTV, leased lines, fiber), so each visitor sees a different message.</li>
+      <li>Plans start about 2,800px down the page, below eight large service cards. Price is a home buyer's first question.</li>
+      <li>Testimonials come after the forms and are anonymous ("Home User, Bangalore Resident").</li>
+      <li>On mobile the page is about 13,600px long, roughly 17 screens, with no sticky call bar.</li>
+      <li>About ten different button labels compete for attention.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-new">
+    <p class="eyebrow">Part 2 · New build</p>
+    <h2 id="s-new">What was done</h2>
+    <div class="grid3">
+      <div class="card"><h3>City hero</h3><p>A full-screen connected Bengaluru skyline. Services rise from the rooftops as you scroll, then the view dives into the network hub.</p></div>
+      <div class="card"><h3>One message</h3><p>"Connecting lives. Powering possibilities." with two clear actions: Explore services and Discuss your requirements.</p></div>
+      <div class="card"><h3>Six service families</h3><p>Internet, networks and Wi-Fi, security and automation, voice and intercom, IT and cloud, entertainment.</p></div>
+      <div class="card"><h3>Who we serve</h3><p>Homes, apartments and communities, businesses, and institutions each get tailored copy and a key outcome.</p></div>
+      <div class="card"><h3>Delivery process</h3><p>Survey, design, install, support: shows how the work actually happens.</p></div>
+      <div class="card"><h3>Pre-filled enquiry</h3><p>Every Explore or Enquire button scrolls to the form with the service and audience already chosen.</p></div>
+    </div>
+    <p class="prose">It also adds service detail panels, a separate mobile hero crop, keyboard navigation, screen-reader labels, a reduced-motion mode, and Open Graph tags for link previews.</p>
+  </section>
+
+  <section aria-labelledby="s-why">
+    <h2 id="s-why">Buyers judge the vendor by the website</h2>
+    <div class="grid2">
+      <div class="card"><h3>Credibility with enterprise</h3><p>IT parks, hospitals and campuses read a template site as a small operator.</p></div>
+      <div class="card"><h3>A message people remember</h3><p>One story replaces three rotating slides that competed for attention.</p></div>
+      <div class="card"><h3>Show the real advantage</h3><p>"One local partner for everything" is now shown as one network across the city, not a product list.</p></div>
+      <div class="card"><h3>Room to grow</h3><p>A modern codebase makes new pages, offers and locality pages quick to add; the old theme loaded 26 jQuery plugins.</p></div>
+    </div>
+    <h3>Talking points for the client</h3>
+    <ul class="points">
+      <li>You now look like the established infrastructure partner you are, not a reseller.</li>
+      <li>One message, one story: Bengaluru connected by one accountable team.</li>
+      <li>Every visitor finds their own path: home, apartment, business or campus.</li>
+      <li>Every button leads to a pre-filled enquiry, so there is less friction before the conversation starts.</li>
+      <li>It is built on a modern stack, so the next pages and offers are quick to add.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-compare">
+    <p class="eyebrow">Part 3 · Comparison</p>
+    <h2 id="s-compare">Where the new build moves ahead</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Area</th><th>Live demo</th><th>New build</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>First impression</td><td>Carousel with 3 messages</td><td>One city hero, one message</td><td><span class="pill up">Better</span></td></tr>
+          <tr><td>Brand feel</td><td>Reskinned template, stock photos</td><td>Custom design and wordmark</td><td><span class="pill up">Much better</span></td></tr>
+          <tr><td>Audiences</td><td>Home / Business split, then ignored</td><td>Four tailored sections</td><td><span class="pill up">Much better</span></td></tr>
+          <tr><td>Process and trust</td><td>None</td><td>Four-step delivery process</td><td><span class="pill up">New</span></td></tr>
+          <tr><td>Enquiry form</td><td>Submits to <code>#</code> silently</td><td>Labelled demo mode, pre-filled, confirmation shown</td><td><span class="pill up">Better UX</span></td></tr>
+          <tr><td>Accessibility</td><td>Letter-split headings, missing labels</td><td>Keyboard, ARIA, reduced motion</td><td><span class="pill up">Much better</span></td></tr>
+          <tr><td>Technology</td><td>jQuery theme, 26 plugins, about 11 s first load</td><td>React and Vite, responsive WebP images</td><td><span class="pill up">Better</span></td></tr>
+          <tr><td>Link previews</td><td>No Open Graph tags</td><td>Open Graph and Twitter tags</td><td><span class="pill up">Better</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-scores">
+    <h2 id="s-scores">Home-buyer conversion is the gap</h2>
+    <div class="bars" role="img" aria-label="Scores out of 10, live demo versus new build: visual design 6.5 to 9; storytelling 5.5 to 8; home-buyer conversion 5 to 3.5; enterprise conversion 5 to 7.5; trust 4 to 5; performance 4 to 6; accessibility 4 to 8.5; overall 6 to 7.5.">
+      <div class="legend"><span class="l-old">Live demo</span><span class="l-new">New build</span></div>
+      <div class="bar-row"><span class="bar-label">Visual design and brand</span><div class="bar-track"><div class="bar" style="width:65%"></div><div class="bar new" style="width:90%"></div></div><span class="bar-vals">6.5 → 9.0</span></div>
+      <div class="bar-row"><span class="bar-label">Storytelling and flow</span><div class="bar-track"><div class="bar" style="width:55%"></div><div class="bar new" style="width:80%"></div></div><span class="bar-vals">5.5 → 8.0</span></div>
+      <div class="bar-row"><span class="bar-label">Conversion: home buyer</span><div class="bar-track"><div class="bar" style="width:50%"></div><div class="bar new" style="width:35%"></div></div><span class="bar-vals">5.0 → 3.5</span></div>
+      <div class="bar-row"><span class="bar-label">Conversion: enterprise</span><div class="bar-track"><div class="bar" style="width:50%"></div><div class="bar new" style="width:75%"></div></div><span class="bar-vals">5.0 → 7.5</span></div>
+      <div class="bar-row"><span class="bar-label">Trust and proof</span><div class="bar-track"><div class="bar" style="width:40%"></div><div class="bar new" style="width:50%"></div></div><span class="bar-vals">4.0 → 5.0</span></div>
+      <div class="bar-row"><span class="bar-label">Performance</span><div class="bar-track"><div class="bar" style="width:40%"></div><div class="bar new" style="width:60%"></div></div><span class="bar-vals">4.0 → 6.0</span></div>
+      <div class="bar-row"><span class="bar-label">Accessibility</span><div class="bar-track"><div class="bar" style="width:40%"></div><div class="bar new" style="width:85%"></div></div><span class="bar-vals">4.0 → 8.5</span></div>
+      <div class="bar-row"><span class="bar-label"><b>Overall</b></span><div class="bar-track"><div class="bar" style="width:60%"></div><div class="bar new" style="width:75%"></div></div><span class="bar-vals"><b>6.0 → 7.5</b></span></div>
+    </div>
+    <p class="prose" style="color:var(--muted);font-size:0.9rem">Scores are reviewer judgement out of 10, not analytics. Performance rises to about 8.5 once the unused 7.9 MB image is removed.</p>
+  </section>
+
+  <section aria-labelledby="s-audits">
+    <p class="eyebrow">Part 4 · Structured audits</p>
+    <h2 id="s-audits">Three audits agree: a strong base with clear gaps</h2>
+    <p class="lead">The new build was checked with three independent methods. They grade on different scales but point at the same problems.</p>
+    <div class="audit-grid">
+      <div class="audit"><span class="label">UX heuristics (Nielsen's 10)</span><span class="num">20<small>/40</small></span><p>Acceptable. Weakest: help and efficiency, at 1 of 4 each, because there is no phone, FAQ or quick way to get in touch.</p></div>
+      <div class="audit"><span class="label">Technical audit</span><span class="num">9<small>/20</small></span><p>Poor. Responsive layout is good (3 of 4); colour tokens and visual clichés score 1 of 4.</p></div>
+      <div class="audit"><span class="label">Six visual pillars</span><span class="num">17<small>/24</small></span><p>Good. Typography is weakest (2 of 4); copy, visuals, colour, spacing and experience score 3 of 4.</p></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Level</th><th>Finding</th><th>Evidence</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td><span class="sev p0">P0</span></td><td><b>No real way to make contact</b></td><td>Form runs in demo mode; placeholder phone; no call or WhatsApp links</td><td>Wire the form; add real contact links</td></tr>
+          <tr><td><span class="sev p1">P1</span></td><td><b>Look drifts into the brief's "avoid" list</b></td><td><code>PRODUCT.md</code> rules out dark cyberpunk and excessive glass. Scan found 93 cyan-glow hits, 19 glass blurs, a gradient-text footer wordmark (<code>footer.css:222</code>), a 2px side stripe (<code>audience.css:228</code>) and a small uppercase label above every section</td><td>One restrained blue system; remove gradient text and side stripe; vary section openers</td></tr>
+          <tr><td><span class="sev p1">P1</span></td><td><b>Scroll is taken over</b></td><td>Hero blocks wheel and touch for 1.8 s (<code>HomeHero.tsx</code>); pinned scenes make the page about 14,900px</td><td>Remove input blocking; shorten pinned scenes</td></tr>
+          <tr><td><span class="sev p1">P1</span></td><td><b>Text contrast below WCAG AA</b></td><td>Hero intro line, blue on sky (about 2.2:1); form note <code>#6b8299</code> on white (4.0:1, needs 4.5:1)</td><td>Darken both</td></tr>
+          <tr><td><span class="sev p2">P2</span></td><td><b>No type or colour system</b></td><td>48 font sizes, 8 weights, text down to 11px; brand blue hard-coded 38 times; only 3 colour variables</td><td>Six size tokens, three weights, 13px floor, colour tokens</td></tr>
+          <tr><td><span class="sev p2">P2</span></td><td><b>Hero icons and body font</b></td><td>CCTV, network security and home automation all open the same panel; body font is Inter, flagged as overused</td><td>Distinct destinations; use Broadway's Manrope throughout</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="prose" style="color:var(--muted);font-size:0.9rem">Strengths the audits confirmed: an art-directed hero with separate mobile images, visible keyboard focus styles in every stylesheet, every scroll animation turned off for reduced-motion users, and labelled form fields. P0 blocks launch, P1 should be fixed before release, P2 in the next pass.</p>
+  </section>
+
+  <section aria-labelledby="s-fix">
+    <p class="eyebrow warn">Part 5 · Before launch</p>
+    <h2 id="s-fix">Six fixes in the new build before the client sees it</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fix</th><th>Detail</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td><b>Real contact details</b></td><td>The site shows a placeholder address (Broadway Communication Towers, 560001), "+91 80 4000 BROADWAY" and a .com email. Use the Yelahanka 560064 address, 951 313 1177 and support@broadwaycommunication.net.</td><td><code>EnquirySection.tsx</code>, <code>Footer.tsx</code></td></tr>
+          <tr><td><b>Verify claims</b></td><td>"Licensed Category ISP", "TRAI/DoT compliant", "24/7/365 NOC", "Wi-Fi 6 router", "symmetric internet", "Established 2000": confirm each with the client or remove it.</td><td>Content</td></tr>
+          <tr><td><b>Remove 7.9 MB preload</b></td><td>An unused image is preloaded on every visit and costs seconds on mobile 4G.</td><td><code>index.html</code></td></tr>
+          <tr><td><b>Broken Support link</b></td><td>Header and footer link to <code>#support</code>, which only exists on the About page.</td><td><code>HomeHeader.tsx</code>, <code>Footer.tsx</code></td></tr>
+          <tr><td><b>Ease the scroll lock</b></td><td>The hero blocks wheel and touch input during a 1.8 s glide. Make it shorter or skippable.</td><td><code>HomeHero.tsx</code></td></tr>
+          <tr><td><b>Shorten the page</b></td><td>About 14,900px; the service ring alone is about 3,800px for six cards. Also convert four 1.7 MB PNGs to WebP and clear about 100 MB of unused images.</td><td>Sections, <code>public/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-carry">
+    <h2 id="s-carry">Bring back what home buyers use</h2>
+    <div class="grid3">
+      <div class="card"><h3>Plans and prices</h3><p>With GST, installation charge, router, data limits and the OTT apps included.</p></div>
+      <div class="card"><h3>PIN check near the top</h3><p>Ask for the PIN first and confirm coverage, then ask for name and phone.</p></div>
+      <div class="card"><h3>Call and WhatsApp</h3><p>In the header and as a sticky bar on mobile: Call, WhatsApp, Check availability.</p></div>
+      <div class="card"><h3>FAQ near the form</h3><p>Installation time, router setup, leased line versus home plan.</p></div>
+      <div class="card"><h3>Real address and areas</h3><p>The Yelahanka office and a list or map of localities served.</p></div>
+      <div class="card"><h3>Two button labels</h3><p>"Check availability" for homes and "Get a quote" for business, used everywhere.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-both">
+    <h2 id="s-both">Trust, tracking and local search</h2>
+    <ul class="points">
+      <li>Connect the form to email, a CRM or a Google Sheet, with a thank-you page and GA4 and Meta conversion events.</li>
+      <li>Replace anonymous testimonials with named customers, apartment or company names, and Google reviews.</li>
+      <li>Add real numbers (customers, buildings connected, uptime) and client and RWA logos.</li>
+      <li>Add LocalBusiness schema, a Google Business Profile link and a map.</li>
+      <li>Add a path for existing customers: pay bill, raise a ticket, speed test.</li>
+      <li>Build locality landing pages such as Yelahanka, Hebbal and Whitefield.</li>
+      <li>Use real photography of the team, vans and installations.</li>
+      <li>Link the social icons to real profiles, or remove them.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s-plan">
+    <p class="eyebrow">Part 6 · Plan</p>
+    <h2 id="s-plan">Three weeks to a site that sells</h2>
+    <div class="weeks">
+      <div class="week w1"><p class="eyebrow warn">Week 1 · must fix</p><ul><li>Connect forms; thank-you page and tracking</li><li>Real contact details, verified claims</li><li>Remove the 7.9 MB preload</li><li>Fix the Support link</li></ul></div>
+      <div class="week"><p class="eyebrow">Week 2 · conversion</p><ul><li>Plans with the fine print</li><li>PIN availability check</li><li>Sticky Call and WhatsApp bar</li><li>Two button labels</li><li>Shorter scroll, no input lock</li><li>Fix contrast; quieter glow and glass</li></ul></div>
+      <div class="week w3"><p class="eyebrow" style="color:var(--fg)">Week 3 · trust and SEO</p><ul><li>Named testimonials, Google reviews</li><li>Logos and real numbers</li><li>Type scale and colour tokens</li><li>Business schema and map</li><li>Locality pages; pay bill and support entry</li></ul></div>
+    </div>
+    <p class="quote">We rebuilt the brand to match Broadway's standing. Next, we add the home-buyer layer and connect the leads, so the site sells as well as it looks.</p>
+  </section>
+
+  <footer>Broadway Communication website review · October 2026 · Live demo measured at codemythought.in/demo/broadway; new build reviewed from the local development version. Audit records: <code>.impeccable/critique/</code> and <code>.planning/ui-reviews/home-UI-REVIEW.md</code>.</footer>
+</div>
